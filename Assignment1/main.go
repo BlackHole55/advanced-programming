@@ -96,22 +96,26 @@ func shapes() {
 }
 
 func company() {
+
+	company := Company.NewCompany()
+
 	fullTimeEmployee1 := Company.FullTimeEmployee{
-		ID:     1,
+		ID:     company.NumForAutoIncrement,
 		Name:   "Arthur",
 		Salary: 500,
 	}
+	company.NumForAutoIncrement += 1
 
 	partTimeEmployee1 := Company.PartTimeEmployee{
-		ID:        2,
+		ID:        company.NumForAutoIncrement,
 		Name:      "Prefect",
 		HourlyPay: 50,
 		Hours:     10,
 	}
+	company.NumForAutoIncrement += 1
 
-	company := Company.NewCompany()
-	company.AddEmployee(fullTimeEmployee1.ID, fullTimeEmployee1)
-	company.AddEmployee(partTimeEmployee1.ID, partTimeEmployee1)
+	company.AddEmployee(fullTimeEmployee1)
+	company.AddEmployee(partTimeEmployee1)
 
 	company.ListEmployees()
 }
