@@ -15,6 +15,7 @@ import (
 
 func library() {
 	library := Library.NewLibrary()
+
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
@@ -31,10 +32,6 @@ func library() {
 
 		switch choice {
 		case "1":
-			fmt.Print("Enter book ID: ")
-			id, _ := reader.ReadString('\n')
-			id = strings.TrimSpace(id)
-
 			fmt.Print("Enter book title: ")
 			title, _ := reader.ReadString('\n')
 			title = strings.TrimSpace(title)
@@ -43,6 +40,9 @@ func library() {
 			author, _ := reader.ReadString('\n')
 			author = strings.TrimSpace(author)
 
+			id := library.NumForAutoIncrement
+			library.NumForAutoIncrement += 1
+
 			book := Library.Book{
 				ID:         id,
 				Title:      title,
@@ -50,7 +50,7 @@ func library() {
 				IsBorrowed: false,
 			}
 
-			library.AddBook(id, book)
+			library.AddBook(book)
 
 		case "2":
 			fmt.Print("Enter book ID: ")

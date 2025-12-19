@@ -1,33 +1,31 @@
 package Library
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Book struct {
-	ID         string
+	ID         uint64
 	Title      string
 	Author     string
 	IsBorrowed bool
 }
 
 type Library struct {
-	Books map[string]Book
+	NumForAutoIncrement uint64
+	Books               map[string]Book
 }
 
 func NewLibrary() *Library {
 	return &Library{
-		Books: make(map[string]Book),
+		NumForAutoIncrement: 1,
+		Books:               make(map[string]Book),
 	}
 }
 
-func (l *Library) AddBook(id string, book Book) {
-	for _, book := range l.Books {
-		if book.ID == id {
-			fmt.Println("Book with such ID is already in library")
-			return
-		}
-	}
-
-	l.Books[id] = book
+func (l *Library) AddBook(book Book) {
+	idKey := fmt.Sprintf("%d", book.ID)
+	l.Books[idKey] = book
 	fmt.Println("Book added successfully")
 }
 
