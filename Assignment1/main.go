@@ -7,10 +7,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/MeirhanSyzdykov/Assignment1/Agents"
 	"github.com/MeirhanSyzdykov/Assignment1/Bank"
 	"github.com/MeirhanSyzdykov/Assignment1/Company"
 	"github.com/MeirhanSyzdykov/Assignment1/Library"
 	"github.com/MeirhanSyzdykov/Assignment1/Shapes"
+	"github.com/MeirhanSyzdykov/Assignment1/Tickets"
 )
 
 func library() {
@@ -167,6 +169,180 @@ func bank() {
 	}
 }
 
+func store() {
+	store := Tickets.NewTicketStore()
+	agents := make(map[string]Agents.Agent)
+
+	reader := bufio.NewReader(os.Stdin)
+
+	for {
+		fmt.Println("\nLibrary Menu")
+		fmt.Println("1. Create Ticket")
+		fmt.Println("2. Add Agent")
+		fmt.Println("3. Assign Ticket to Agent")
+		fmt.Println("4. Resolve Ticket")
+		fmt.Println("5. List All Tickets")
+		fmt.Println("6. List OPEN Tickets")
+		fmt.Println("7. List DONE Tickets")
+		fmt.Println("8. List Unassigned Tickets")
+		fmt.Println("9. Exit")
+
+		fmt.Print("Choose an option: ")
+
+		choice, _ := reader.ReadString('\n')
+		choice = strings.TrimSpace(choice)
+
+		switch choice {
+		case "1":
+			fmt.Print("Enter ticket ID: ")
+			id, _ := reader.ReadString('\n')
+			id = strings.TrimSpace(id)
+
+			fmt.Print("Enter ticket Title: ")
+			title, _ := reader.ReadString('\n')
+			title = strings.TrimSpace(title)
+
+			fmt.Print("Enter ticket Description: ")
+			description, _ := reader.ReadString('\n')
+			description = strings.TrimSpace(description)
+
+			priorityVal := 0
+
+			for {
+				fmt.Print("Enter ticket Priority: ")
+				priority, _ := reader.ReadString('\n')
+				priority = strings.TrimSpace(priority)
+				priorityVal, _ = strconv.Atoi(priority)
+
+				if priorityVal == 0 {
+					fmt.Println("Priority must be between 1 and 3")
+					continue
+				}
+
+				break
+			}
+
+			fmt.Print("Enter ticket Status: ")
+			status, _ := reader.ReadString('\n')
+			status = strings.TrimSpace(status)
+
+			ticket := Tickets.Ticket{
+				ID:          id,
+				Title:       title,
+				Description: description,
+				Priority:    priorityVal,
+				Status:      status,
+			}
+
+			store.Create(ticket)
+
+		case "2":
+			fmt.Print("Enter Agent Type (Human/Bot): ")
+			agentType, _ := reader.ReadString('\n')
+			agentType = strings.TrimSpace(agentType)
+
+			if agentType == "Human" {
+				fmt.Print("Enter Agent ID: ")
+				id, _ := reader.ReadString('\n')
+				id = strings.TrimSpace(id)
+
+				fmt.Print("Enter Agent Name: ")
+				name, _ := reader.ReadString('\n')
+				name = strings.TrimSpace(name)
+
+				agent := Agents.HumanAgent{
+					ID:   id,
+					Name: name,
+				}
+
+				agents[id] = agent
+
+			} else if agentType == "Bot" {
+				fmt.Print("Enter Agent ID: ")
+				id, _ := reader.ReadString('\n')
+				id = strings.TrimSpace(id)
+
+				fmt.Print("Enter Agent Name: ")
+				name, _ := reader.ReadString('\n')
+				name = strings.TrimSpace(name)
+
+				fmt.Print("Enter Agent Version: ")
+				version, _ := reader.ReadString('\n')
+				version = strings.TrimSpace(version)
+
+				agent := Agents.BotAgent{
+					ID:      id,
+					Name:    name,
+					Version: version,
+				}
+
+				agents[id] = agent
+			}
+
+		case "3":
+			fmt.Print("Enter Ticket ID: ")
+			ticketId, _ := reader.ReadString('\n')
+			ticketId = strings.TrimSpace(ticketId)
+
+			ticketExists := false
+
+			for key := range store.Items {
+				if key == ticketId {
+					ticketExists = true
+				}
+			}
+
+			fmt.Print("Enter Agent ID: ")
+			agentId, _ := reader.ReadString('\n')
+			agentId = strings.TrimSpace(agentId)
+
+			agentExists := false
+
+			for key := range agents {
+				if key == agentId {
+					agentExists = true
+				}
+			}
+
+			if !ticketExists {
+				fmt.Println("Ticket does not exists")
+				break
+			} else if !agentExists {
+				fmt.Println("Agent does not exist")
+				break
+			}
+
+			store.Assign(ticketId, agentId)
+
+		case "4":
+			fmt.Print("Enter Ticket ID: ")
+			ticketId, _ := reader.ReadString('\n')
+			ticketId = strings.TrimSpace(ticketId)
+
+			store.Resolve(ticketId)
+
+		case "5":
+			store.ListAll()
+
+		case "6":
+			store.ListByStatus("OPEN")
+
+		case "7":
+			store.ListByStatus("DONE")
+
+		case "8":
+			store.ListUnassigned()
+
+		case "9":
+			return
+
+		default:
+			fmt.Println("There is no such option. Please try again")
+		}
+	}
+
+}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -176,7 +352,8 @@ func main() {
 		fmt.Println("2. Shapes")
 		fmt.Println("3. Company")
 		fmt.Println("4. Bank")
-		fmt.Println("5. Exit")
+		fmt.Println("5. Ticket Store")
+		fmt.Println("6. Exit")
 		fmt.Print("Choose an option: ")
 
 		choice, _ := reader.ReadString('\n')
@@ -196,6 +373,9 @@ func main() {
 			bank()
 
 		case "5":
+			store()
+
+		case "6":
 			return
 
 		default:
