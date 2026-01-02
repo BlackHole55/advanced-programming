@@ -95,7 +95,7 @@ func (ts *TicketStore) ListAll() []Ticket {
 	tickets := make([]Ticket, 0)
 
 	for _, value := range ts.Items {
-		fmt.Printf("ID: %s, Title: %s, Description: %s, Priority: %d, AssigneeID: %s, Status: %s", value.ID, value.Title, value.Description, value.Priority, value.AssigneeID, value.Status)
+		fmt.Printf("ID: %s, Title: %s, Description: %s, Priority: %d, AssigneeID: %s, Status: %s\n", value.ID, value.Title, value.Description, value.Priority, value.AssigneeID, value.Status)
 		tickets = append(tickets, value)
 	}
 
@@ -107,7 +107,7 @@ func (ts *TicketStore) ListByStatus(status string) []Ticket {
 
 	for _, value := range ts.Items {
 		if value.Status == status {
-			fmt.Printf("ID: %s, Title: %s, Description: %s, Priority: %d, AssigneeID: %s, Status: %s", value.ID, value.Title, value.Description, value.Priority, value.AssigneeID, value.Status)
+			fmt.Printf("ID: %s, Title: %s, Description: %s, Priority: %d, AssigneeID: %s, Status: %s\n", value.ID, value.Title, value.Description, value.Priority, value.AssigneeID, value.Status)
 			tickets = append(tickets, value)
 		}
 	}
@@ -120,7 +120,7 @@ func (ts *TicketStore) ListUnassigned() []Ticket {
 
 	for _, value := range ts.Items {
 		if value.Status == "OPEN" && len(value.AssigneeID) == 0 {
-			fmt.Printf("ID: %s, Title: %s, Description: %s, Priority: %d, AssigneeID: %s, Status: %s", value.ID, value.Title, value.Description, value.Priority, value.AssigneeID, value.Status)
+			fmt.Printf("ID: %s, Title: %s, Description: %s, Priority: %d, AssigneeID: %s, Status: %s\n", value.ID, value.Title, value.Description, value.Priority, value.AssigneeID, value.Status)
 			tickets = append(tickets, value)
 		}
 	}

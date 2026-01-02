@@ -222,16 +222,12 @@ func store() {
 				break
 			}
 
-			fmt.Print("Enter ticket Status: ")
-			status, _ := reader.ReadString('\n')
-			status = strings.TrimSpace(status)
-
 			ticket := Tickets.Ticket{
 				ID:          id,
 				Title:       title,
 				Description: description,
 				Priority:    priorityVal,
-				Status:      status,
+				Status:      "OPEN",
 			}
 
 			store.Create(ticket)
@@ -277,6 +273,8 @@ func store() {
 				}
 
 				agents[id] = agent
+			} else {
+				fmt.Println("Input must be either Human or Bot")
 			}
 
 		case "3":
