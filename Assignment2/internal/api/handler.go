@@ -27,6 +27,12 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		h.CreateTask(w, r)
+
+	case http.MethodGet:
+		h.GetAllTasks(w, r)
+
+	default:
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
