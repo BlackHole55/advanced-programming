@@ -1,25 +1,23 @@
 package queue
 
-import "github.com/MeirhanSyzdykov/Assignment2/internal/model"
-
-type TaskQueue struct {
-	ch chan *model.Task
+type TaskQueue[T any] struct {
+	ch chan T
 }
 
-func NewTaskQueue(size int) *TaskQueue {
-	return &TaskQueue{
-		ch: make(chan *model.Task, size),
+func NewTaskQueue[T any](size int) *TaskQueue[T] {
+	return &TaskQueue[T]{
+		ch: make(chan T, size),
 	}
 }
 
-func (q *TaskQueue) Push(task *model.Task) {
+func (q *TaskQueue[T]) Push(task T) {
 	q.ch <- task
 }
 
-func (q *TaskQueue) Channel() <-chan *model.Task {
+func (q *TaskQueue[T]) Channel() <-chan T {
 	return q.ch
 }
 
-func (q *TaskQueue) Close() {
+func (q *TaskQueue[T]) Close() {
 	close(q.ch)
 }

@@ -14,10 +14,10 @@ import (
 
 type Handler struct {
 	store *store.MemoryStore
-	queue *queue.TaskQueue
+	queue *queue.TaskQueue[*model.Task]
 }
 
-func NewHandler(store *store.MemoryStore, queue *queue.TaskQueue) *Handler {
+func NewHandler(store *store.MemoryStore, queue *queue.TaskQueue[*model.Task]) *Handler {
 	return &Handler{
 		store: store,
 		queue: queue,

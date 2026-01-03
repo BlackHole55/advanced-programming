@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/MeirhanSyzdykov/Assignment2/internal/api"
+	"github.com/MeirhanSyzdykov/Assignment2/internal/model"
 	"github.com/MeirhanSyzdykov/Assignment2/internal/queue"
 	"github.com/MeirhanSyzdykov/Assignment2/internal/store"
 	"github.com/MeirhanSyzdykov/Assignment2/internal/worker"
@@ -16,7 +17,7 @@ import (
 
 func main() {
 	store := store.NewMemoryStore()
-	queue := queue.NewTaskQueue(100)
+	queue := queue.NewTaskQueue[*model.Task](100)
 
 	worker.NewWorkerPool(2, queue.Channel(), store)
 
