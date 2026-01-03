@@ -6,7 +6,7 @@ type TaskQueue struct {
 	ch chan *model.Task
 }
 
-func New(size int) *TaskQueue {
+func NewTaskQueue(size int) *TaskQueue {
 	return &TaskQueue{
 		ch: make(chan *model.Task, size),
 	}
