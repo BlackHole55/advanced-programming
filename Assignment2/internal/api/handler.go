@@ -23,17 +23,36 @@ func NewHandler(store *store.MemoryStore, queue *queue.TaskQueue) *Handler {
 	}
 }
 
-func (h *Handler) CreateTask(w http.ResponseWriter, _ *http.Request) {
+func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		h.CreateTask(w, r)
+	}
+}
+
+func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Payload string `json:"payload"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid json", http.StatusBadRequest)
+		return
+	}
+
 	task := &model.Task{
-		ID:     uuid.NewString(),
-		Status: model.Pending,
+		ID:      uuid.NewString(),
+		Payload: req.Payload,
+		Status:  model.Pending,
 	}
 
 	h.store.Save(task)
 	h.queue.Push(task)
 
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(task)
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{
+		"id": task.ID,
+	})
 }
 
 func (h *Handler) Stats(w http.ResponseWriter, _ *http.Request) {
