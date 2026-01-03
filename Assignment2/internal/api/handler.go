@@ -55,6 +55,13 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func (h *Handler) GetAllTasks(w http.ResponseWriter, _ *http.Request) {
+	tasks := h.store.All()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(tasks)
+}
+
 func (h *Handler) Stats(w http.ResponseWriter, _ *http.Request) {
 	tasks := h.store.All()
 
