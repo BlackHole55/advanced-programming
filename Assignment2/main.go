@@ -20,6 +20,9 @@ func main() {
 
 	worker.NewWorkerPool(2, queue.Channel(), store)
 
+	monitorStop := make(chan struct{})
+	worker.StartMonitoring(store, monitorStop)
+
 	handler := api.NewHandler(store, queue)
 
 	mux := http.NewServeMux()
@@ -42,6 +45,8 @@ func main() {
 	<-stop
 
 	log.Println("Shutting down...")
+	close(monitorStop)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
